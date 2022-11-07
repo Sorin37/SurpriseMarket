@@ -14,7 +14,7 @@ public class User {
         this.points = 0;
     }
 
-    public User(String token, String username, String role, int points) {
+    public User(String token, String username, String role, long points) {
         this.token = token;
         this.username = username;
         this.role = role;
@@ -51,5 +51,15 @@ public class User {
 
     public void setPoints(long points) {
         this.points = points;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "token='" + token + '\'' +
+                ", username='" + username + '\'' +
+                ", role='" + role + '\'' +
+                ", points=" + points +
+                '}';
     }
 }

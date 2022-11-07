@@ -1,8 +1,10 @@
 package com.example.emarket;
 
+import com.example.emarket.database.Database;
 import com.example.emarket.model.User;
 
 import java.io.*;
+import java.sql.Connection;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
@@ -14,14 +16,12 @@ public class MainPage extends HttpServlet {
         System.out.println("DO GET");
         HttpSession session = request.getSession();
         User currentUser = (User) session.getAttribute("currentUser");
-        if (currentUser == null) {
-            currentUser = new User("Sorin", "New", "client", 3);
-        }
-        session.setAttribute("currentUser", currentUser);
 
+        session.setAttribute("currentUser", currentUser);
         request.setAttribute("token", currentUser.getToken());
         request.setAttribute("username", currentUser.getUsername());
         request.setAttribute("points", currentUser.getPoints());
+
         getServletContext().getRequestDispatcher("/jsp/index.jsp").forward(request, response);
 
         session.setAttribute("showToken", false);
@@ -37,10 +37,13 @@ public class MainPage extends HttpServlet {
         request.setAttribute("username", currentUser.getUsername());
 
         long currentPoints = currentUser.getPoints();
-        if (Float.parseFloat(request.getParameter("fullPrice")) >= 100){
+        if (Float.parseFloat(request.getParameter("fullPrice")) >= 100) {
             currentPoints += 10;
             currentUser.setPoints(currentPoints);
             session.setAttribute("currentUser", currentUser);
+            Database db = new Database();
+            Connection conn = db.connect_to_db();
+            db.updatePoints(conn, currentUser.getToken(), currentPoints);
         }
 
         request.setAttribute("points", currentPoints);
