@@ -13,7 +13,6 @@ import javax.servlet.annotation.*;
 public class MainPage extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        System.out.println("DO GET");
         HttpSession session = request.getSession();
         User currentUser = (User) session.getAttribute("currentUser");
 
@@ -25,17 +24,12 @@ public class MainPage extends HttpServlet {
         getServletContext().getRequestDispatcher("/jsp/index.jsp").forward(request, response);
 
         session.setAttribute("showToken", false);
-//        session.setAttribute("currentUser", currentUser);
     }
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("DO POST");
-
         HttpSession session = request.getSession();
         User currentUser = (User) session.getAttribute("currentUser");
-
-        System.out.println(currentUser);
 
         request.setAttribute("username", currentUser.getUsername());
         request.setAttribute("role", currentUser.getRole());
@@ -52,8 +46,11 @@ public class MainPage extends HttpServlet {
 
         request.setAttribute("points", currentPoints);
 
-        getServletContext().getRequestDispatcher("/jsp/index.jsp").forward(request, response);
-//        session.setAttribute("currentUser", currentUser);
+        if (currentPoints == 100 || currentPoints == 200 || currentPoints == 300 || currentPoints == 400) {
+            response.sendRedirect("/gift");
+        } else {
+            getServletContext().getRequestDispatcher("/jsp/index.jsp").forward(request, response);
+        }
     }
 
     public void destroy() {
