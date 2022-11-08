@@ -17,14 +17,15 @@ public class MainPage extends HttpServlet {
         HttpSession session = request.getSession();
         User currentUser = (User) session.getAttribute("currentUser");
 
-        session.setAttribute("currentUser", currentUser);
         request.setAttribute("token", currentUser.getToken());
         request.setAttribute("username", currentUser.getUsername());
+        request.setAttribute("role", currentUser.getRole());
         request.setAttribute("points", currentUser.getPoints());
 
         getServletContext().getRequestDispatcher("/jsp/index.jsp").forward(request, response);
 
         session.setAttribute("showToken", false);
+//        session.setAttribute("currentUser", currentUser);
     }
 
     @Override
@@ -34,10 +35,13 @@ public class MainPage extends HttpServlet {
         HttpSession session = request.getSession();
         User currentUser = (User) session.getAttribute("currentUser");
 
+        System.out.println(currentUser);
+
         request.setAttribute("username", currentUser.getUsername());
+        request.setAttribute("role", currentUser.getRole());
 
         long currentPoints = currentUser.getPoints();
-        if (Float.parseFloat(request.getParameter("fullPrice")) >= 100) {
+        if (Float.parseFloat(request.getParameter("fullPrice")) >= 100 && currentUser.getRole().equals("client")) {
             currentPoints += 10;
             currentUser.setPoints(currentPoints);
             session.setAttribute("currentUser", currentUser);
@@ -49,6 +53,7 @@ public class MainPage extends HttpServlet {
         request.setAttribute("points", currentPoints);
 
         getServletContext().getRequestDispatcher("/jsp/index.jsp").forward(request, response);
+//        session.setAttribute("currentUser", currentUser);
     }
 
     public void destroy() {

@@ -8,33 +8,40 @@
     <%--    <link href="../css/styles.css" rel="stylesheet" type="text/css">--%>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            console.log("${showToken}");
             if (${showToken}) {
                 alert("Your token is ${token}");
             }
         });
 
         function discount() {
-            if (document.form.fullPrice.value >= 500 && ${points} >= 100) {
+            if (document.form.fullPrice.value >= 500 && ${points} >= 100 && '${role}' == 'client') {
                 const discount = ${points} < 400 ? Math.trunc(${points} / 100) * 5 : 20;
                     alert("You obtained a " + discount + " lei discount");
             }
             document.form.submit();
+        }
+
+        function logout() {
+            document.location.href = "${pageContext.request.contextPath}/logout";
         }
     </script>
 </head>
 <body>
 <div class="flex" style="display: flex; justify-content: space-between">
     <div>
-        <span style="font-size: 50px;"><% String username = (String) request.getAttribute("username");
-            if (!Objects.equals(username, "")) {
-                out.print("Hello " + username);
-            } else {
-                out.print("<button onlick=\"window.location = '/GeneralInfo.jsp';\">Login</button>");
-            }%></span>
+        <% String username = (String) request.getAttribute("username");%>
+        <span style="font-size: 50px;">Hello ${username}</span>
+        <button type="button" onclick="logout()" style="font-size: 50px; height: 60px">Log out</button>
     </div>
     <div>
-        <span style="font-size: 50px;">Points: ${points}</span>
+        <span style="font-size: 50px;">
+    <%
+        if (request.getAttribute("role").equals("client")) {
+            out.print("Points: " + request.getAttribute("points"));
+        }else{
+            out.print("");
+        }
+    %></span>
     </div>
 </div>
 <form method="POST" style="font-size: 50px;" name="form">

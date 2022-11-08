@@ -32,7 +32,7 @@ public class Login extends HttpServlet {
 
         User user = db.getUser(conn, request.getParameter("loginToken"));
         if (user == null) {
-            response.sendRedirect("/notfound");
+            response.sendRedirect("/error");
         } else {
             HttpSession session = request.getSession();
             session.setAttribute("currentUser", user);
