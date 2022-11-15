@@ -2,6 +2,7 @@ package com.example.emarket.database;
 
 import com.example.emarket.model.User;
 
+import java.nio.charset.Charset;
 import java.security.SecureRandom;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -10,6 +11,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 public class Database {
     public Connection connect_to_db() {
@@ -32,11 +34,8 @@ public class Database {
         Statement statement;
         String token = null;
         try {
-            SecureRandom random = new SecureRandom();
-            byte[] bytes = new byte[20];
-            random.nextBytes(bytes);
-            token = bytes.toString();
-            System.out.println(token);
+            UUID randomUUID = UUID.randomUUID();
+            token = randomUUID.toString().replaceAll("_", "");
             String query = String.format("INSERT INTO public.users(token, username, role, points) " +
                     "VALUES ('%s', '%s', '%s', '%s')", token, username, "client", 0);
             statement = connection.createStatement();
